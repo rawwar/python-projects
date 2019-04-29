@@ -102,16 +102,47 @@ def group_by_number_pattern_and_length(lst):
         len_of_pattern = len(pattern)
         dict_key = str(len_of_pattern) +"_"+ str(len_of_str)
         if dict_key in pattern_to_file_dict:
-            pattern_to_file_dict[dict_key].append(each)
+            pattern_to_file_dict[dict_key].append(re.split("([0-9]+)",each) )
         else:
-            pattern_to_file_dict[dict_key] = [each]
+            pattern_to_file_dict[dict_key] = [re.split("([0-9]+)",each) ]
     return pattern_to_file_dict
 
+def split_by_number_pattern(pattern_dict):
+    res_dict = {}
+    for key,value in pattern_dict.items():
+        res_dict[key] = [re.split("([0-9]+)",each) for each in value]
+    return res_dict
 
+def sort_from_right(lst):
+    pass
+
+def print_to_console(lst):
+    '''
+    lst should be in the following format
+    lst should consist of list
+    each list should have the following
+    at index 0 - count
+    at index 1 - file format
+    at index 2 -  string which indicates start and end of series
+    '''
+    for each in sorted(lst,lambda x: x[1]):
+        print(each[0],each[1],each[2])
+
+def group_by_hash(lst):
+    res_dict = {}
+    for each in lst:
+        hash_value = hash(tuple(re.split("[0-9]+",each)))
+        if hash_value in res_dict:
+            res_dict[hash_value].append(each)
+        else:
+            res_dict[hash_value] = [each]
+    return res_dict
 
 
 # Go from right to left .. find extension.. group them.. then find next sub extension and group them.. keep doing that till 
 # we reach start of the string?
+
+# use sorted with key as regex output of digits pattern
 if __name__ == "__main__":
     lst = os.listdir("data/")
     # temp1 = group_by_length(lst)

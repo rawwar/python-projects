@@ -21,6 +21,10 @@ file02_0044.rgb
 file02_0045.rgb
 file02_0046.rgb
 file02_0047.rgb
+mile02_0044.rgb
+mile02_0045.rgb
+mile02_0046.rgb
+mile02_0047.rgb
 file1.03.rgb
 file2.03.rgb
 file3.03.rgb
@@ -29,5 +33,5 @@ file.info.03.rgb
 '''
 
 for each in data.replace("\n"," ").split():
-    open(each,'w').close()
+    open(os.path.join("data",each),'w').close()
 
