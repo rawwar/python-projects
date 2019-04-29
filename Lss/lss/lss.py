@@ -94,6 +94,19 @@ def group_by_number_pattern(lst):
             pattern_to_file_dict[len_of_pattern] = [each]
     return pattern_to_file_dict
 
+def group_by_number_pattern_and_length(lst):
+    pattern_to_file_dict = {}
+    for each in lst:
+        pattern = re.findall("([0-9]+)",each)
+        len_of_str = len(each)
+        len_of_pattern = len(pattern)
+        dict_key = str(len_of_pattern) +"_"+ str(len_of_str)
+        if dict_key in pattern_to_file_dict:
+            pattern_to_file_dict[dict_key].append(each)
+        else:
+            pattern_to_file_dict[dict_key] = [each]
+    return pattern_to_file_dict
+
 
 
 
@@ -101,8 +114,9 @@ def group_by_number_pattern(lst):
 # we reach start of the string?
 if __name__ == "__main__":
     lst = os.listdir("data/")
-    temp1 = group_by_length(lst)
-    new_dict = {}
-    for key,value in temp1.items():
-        new_dict[key] = group_by_number_pattern(value)
+    # temp1 = group_by_length(lst)
+    # new_dict = {}
+    # for key,value in temp1.items():
+    #     new_dict[key] = group_by_number_pattern(value)
+    new_dict = group_by_number_pattern_and_length(lst)
     pprint(new_dict)
