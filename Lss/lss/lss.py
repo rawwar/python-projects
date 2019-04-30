@@ -60,6 +60,7 @@ It should produce:
 
 import os
 import re
+from more_itertools import consecutive_groups
 from pprint import pprint
 
 data_folder = "data"
@@ -140,17 +141,42 @@ def group_by_hash(lst):
 
 def combine_values(lst):
     fin_lst = []
+    res = []
     for each in zip(*lst):
         fin_lst.append(set(each))
     for each in fin_lst:
         if len(each)>1:
-            
+            int_lst = [int(i) for i in each]
+            temp_lst = []
+            for each_lst in [list(group) for group in consecutive_groups(sorted(int_lst))]:
+                if len(each_lst)==1:
+                    temp_lst.append(str(each_lst[0]))
+                else:
+                    temp_lst.append(str(each_lst[0]) + "-" + str(each_lst[-1]))
+            res.append("\t".join(temp_lst))
+                
+        else:
+            res.append(each)
+    return res
+
 # Use [list(group) for group in consecutive_groups(sorted(z))] , consecutive_groups is imported from more_itertools
 
 # Go from right to left .. find extension.. group them.. then find next sub extension and group them.. keep doing that till 
 # we reach start of the string?
 
 # use sorted with key as regex output of digits pattern
+
+
+# Current output: 
+# 1866123909547272289 [{'alpha.txt'}]
+# 8211676718420172478 [{'elem.info'}]
+# 873150919273017500 [{'file.info.'}, {'03'}, {'.rgb'}]
+# 7688575126262578364 [{'file'}, '1-2', {'_'}, '40-47', {'.rgb'}]
+# -247798305264179467 [{'file'}, '1-4', {'.'}, {'03'}, {'.rgb'}]
+# 6496405249312978273 [{'sd_fx'}, {'29'}, {'.'}, '101-121\t123-147', {'.rgb'}]
+# 1522664490650659231 [{'strange.xml'}]
+
+
 if __name__ == "__main__":
     lst = os.listdir("data/")
     # temp1 = group_by_length(lst)
