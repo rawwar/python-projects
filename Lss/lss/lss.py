@@ -133,11 +133,19 @@ def group_by_hash(lst):
     for each in lst:
         hash_value = hash(tuple(re.split("[0-9]+",each)))
         if hash_value in res_dict:
-            res_dict[hash_value].append(each)
+            res_dict[hash_value].append(re.split("([0-9]+)",each))
         else:
-            res_dict[hash_value] = [each]
+            res_dict[hash_value] = [re.split("([0-9]+)",each)]
     return res_dict
 
+def combine_values(lst):
+    fin_lst = []
+    for each in zip(*lst):
+        fin_lst.append(set(each))
+    for each in fin_lst:
+        if len(each)>1:
+            
+# Use [list(group) for group in consecutive_groups(sorted(z))] , consecutive_groups is imported from more_itertools
 
 # Go from right to left .. find extension.. group them.. then find next sub extension and group them.. keep doing that till 
 # we reach start of the string?
