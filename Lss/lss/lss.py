@@ -62,10 +62,12 @@ import os
 import re
 from more_itertools import consecutive_groups
 from pprint import pprint
+from itertools import chain
 
 data_folder = "data"
 
 # 1. Group by length
+global_lst = []
 
 def group_by_length(lst):
     '''
@@ -139,25 +141,49 @@ def group_by_hash(lst):
             res_dict[hash_value] = [re.split("([0-9]+)",each)]
     return res_dict
 
-def combine_values(lst):
-    fin_lst = []
-    res = []
-    for each in zip(*lst):
-        fin_lst.append(set(each))
-    for each in fin_lst:
-        if len(each)>1:
-            int_lst = [int(i) for i in each]
-            temp_lst = []
-            for each_lst in [list(group) for group in consecutive_groups(sorted(int_lst))]:
-                if len(each_lst)==1:
-                    temp_lst.append(str(each_lst[0]))
-                else:
-                    temp_lst.append(str(each_lst[0]) + "-" + str(each_lst[-1]))
-            res.append("\t".join(temp_lst))
-                
-        else:
-            res.append(each)
-    return res
+# def get_print_pattern(lst, digit_pattern_count=0):
+#     if digit_pattern_count==0:
+#         return ["1\t"+i for i in lst]
+#     else:
+#         return ""
+
+def simple_pattern(lst):
+    pass
+
+def combine_values(hash_dict):
+    res_dict = {}
+    for key,value in hash_dict.items():
+        fin_lst = []
+        res = []
+        # if len(lst)>0 and len(lst[0])==1:
+        #     return list(chain(*lst))
+        if len(value) ==1:
+            fin_lst.append([value[0],None])
+            continue
+
+        for each in zip(*value):
+
+            fin_lst.append(list(set(each)))
+        for each in fin_lst:
+            if len(each)>1:
+                int_lst = [int(i) for i in each]
+                # temp_lst = []
+                # Skipping group as of now. Should be done once, we segregate the patterns
+                # for each_lst in [list(group) for group in consecutive_groups(sorted(int_lst))]:
+                #     if len(each_lst)==1:
+                #         temp_lst.append(str(each_lst[0]))
+                #     else:
+                #         temp_lst.append(str(each_lst[0]) + "-" + str(each_lst[-1]))
+                # res.append("\t".join(temp_lst))
+                res.append(int_lst)
+                    
+            else:
+                res.append(each[0])
+        res_dict[key] = res
+    return res_dict
+
+
+
 
 # Use [list(group) for group in consecutive_groups(sorted(z))] , consecutive_groups is imported from more_itertools
 
@@ -183,5 +209,14 @@ if __name__ == "__main__":
     # new_dict = {}
     # for key,value in temp1.items():
     #     new_dict[key] = group_by_number_pattern(value)
-    new_dict = group_by_number_pattern_and_length(lst)
-    pprint(new_dict)
+    new_dict = group_by_hash(lst)
+    # for key,value in new_dict.items():
+    #     print(key,"=",combine_values(value))
+    # new_dict1 = {}
+    # for key,value in new_dict:    
+    #     res = combine_values(value)
+    #     if res:
+    #         new_dict1[key] = res
+    pprint(combine_values(new_dict))
+
+    # pprint(new_dict)
