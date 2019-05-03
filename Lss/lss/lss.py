@@ -157,7 +157,8 @@ def parse_simple_pattern(lst):
             int_lst = [int(i) for i in each]
             group_lst = [list(group) for group in consecutive_groups(sorted(int_lst))]
             pattern = ",".join(str(i) if len(i)==1 else str(i[0])+"-"+str(i[-1]) for i in group_lst)
-            temp_str+= f"%{len(each[0])}d"
+            pad = True if each[0].startswith("0") else False
+            temp_str+= f"%{0 if pad else ''}{len(each[0]) if len(each[0])>1 else ''}d"
         else:
             temp_str+=each
     global_lst.extend([temp_str,pattern])
