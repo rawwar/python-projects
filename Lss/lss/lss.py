@@ -151,14 +151,16 @@ def simple_pattern(lst):
     pass
 
 def combine_values(hash_dict):
+    global global_lst
     res_dict = {}
     for key,value in hash_dict.items():
+        # print(value)
         fin_lst = []
         res = []
         # if len(lst)>0 and len(lst[0])==1:
         #     return list(chain(*lst))
         if len(value) ==1:
-            fin_lst.append([value[0],None])
+            global_lst.append(["".join(value[0]),None])
             continue
 
         for each in zip(*value):
@@ -166,7 +168,7 @@ def combine_values(hash_dict):
             fin_lst.append(list(set(each)))
         for each in fin_lst:
             if len(each)>1:
-                int_lst = [int(i) for i in each]
+                # int_lst = [int(i) for i in each]
                 # temp_lst = []
                 # Skipping group as of now. Should be done once, we segregate the patterns
                 # for each_lst in [list(group) for group in consecutive_groups(sorted(int_lst))]:
@@ -175,8 +177,7 @@ def combine_values(hash_dict):
                 #     else:
                 #         temp_lst.append(str(each_lst[0]) + "-" + str(each_lst[-1]))
                 # res.append("\t".join(temp_lst))
-                res.append(int_lst)
-                    
+                res.append(each)   
             else:
                 res.append(each[0])
         res_dict[key] = res
@@ -194,13 +195,11 @@ def combine_values(hash_dict):
 
 
 # Current output: 
-# 1866123909547272289 [{'alpha.txt'}]
-# 8211676718420172478 [{'elem.info'}]
-# 873150919273017500 [{'file.info.'}, {'03'}, {'.rgb'}]
-# 7688575126262578364 [{'file'}, '1-2', {'_'}, '40-47', {'.rgb'}]
-# -247798305264179467 [{'file'}, '1-4', {'.'}, {'03'}, {'.rgb'}]
-# 6496405249312978273 [{'sd_fx'}, {'29'}, {'.'}, '101-121\t123-147', {'.rgb'}]
-# 1522664490650659231 [{'strange.xml'}]
+# {7246778219425438856: ['file', [2, 1], '_', [41, 42, 46, 44, 40, 43, 45, 47], '.rgb'],
+#  -7653309545331537185: ['file', [2, 4, 3, 1], '.', '03', '.rgb'],
+#   2560570973841848710: ['sd_fx', '29', '.', [112, 138, 103, 113, 121, 142, 134, 143, 135, 136, 115, 111, 130, 104, 147, 126,
+#  139, 133, 128, 129, 107, 114, 119, 140, 127, 145, 120, 109, 131, 108, 118, 102, 141, 117, 123, 125, 101, 105, 146,
+#  116, 137, 110, 124, 132, 106, 144], '.rgb']}
 
 
 if __name__ == "__main__":
@@ -217,6 +216,6 @@ if __name__ == "__main__":
     #     res = combine_values(value)
     #     if res:
     #         new_dict1[key] = res
-    pprint(combine_values(new_dict))
+    print(combine_values(new_dict))
 
     # pprint(new_dict)
