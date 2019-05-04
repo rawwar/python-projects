@@ -1,23 +1,31 @@
-
 import os
 import re
 from more_itertools import consecutive_groups
 from pprint import pprint
-import json
-from itertools import chain, tee
+from itertools import tee
+from collections import defaultdict
 
 data_folder = "data"
 
 
-def group_by_hash(lst):
-    res_dict = {}
-    for each in lst:
+def group_by_hash(file_list):
+    '''
+    This function takes a list and groups elements 
+    based on a hash and returns a dictionary.
+
+    Parameters:
+        file_list: list of all file names
+    
+    Returns:
+        grouped_dict: A dictionary where key is a hash and value is a 
+                      list of file names with similar pattern
+    '''
+    grouped_dict = defaultdict(lambda: [])
+    for each in file_list:
         hash_value = hash(tuple(re.split("[0-9]+", each)))
-        if hash_value in res_dict:
-            res_dict[hash_value].append(each)
-        else:
-            res_dict[hash_value] = [each]
-    return res_dict
+        grouped_dict[hash_value].append(re.split("([0-9]+)", each))
+
+    return grouped_dict
 
 
 def pairwise(iterable):
@@ -27,11 +35,13 @@ def pairwise(iterable):
     return zip(a, b)
 
 
-def check_pattern(str1, str2):
-    str_split1 = re.split("([0-9]+)", str1)[::-1]
-    str_split2 = re.split("([0-9]+)", str2)[::-1]
+def check_pattern(file1, file2):
+    '''
+    This function takes two lists, compares them and False True if
+    two functions differ at more than two places else it returns True
+    '''
     counter = 0
-    for i, j in zip(*[str_split1, str_split2]):
+    for i, j in zip(*[file1[::-1], file2[::-1]]):
         if i != j:
             counter += 1
         if counter >= 2:
@@ -40,7 +50,7 @@ def check_pattern(str1, str2):
 
 
 def parse_simple_pattern(lst):
-    global global_lst
+    # global global_lst
     temp_str = ""
     pattern = ""
     count = 1
@@ -59,22 +69,26 @@ def parse_simple_pattern(lst):
         else:
             temp_str += each
 
-    global_lst.append([temp_str, pattern, count])
+    print_patterns([temp_str, pattern, count])
 
 
-def print_patterns(lst):
-    for each in lst:
-        if each[1]:
-            print(each[2], each[0], each[1])
-        else:
-            print(1, each[0])
+def combine_values(lst):
+    '''
+    This function takes a list of file patterns and combines them to be parsable by
+    parse_simple_pattern function.
+    '''
+    fin_lst = []
+    for each in zip(*lst):
+        val = list(set(each))
+        fin_lst.append(val[0] if len(val) == 1 else val)
+    parse_simple_pattern(fin_lst)
 
 
 def parse_for_patterns(pattern_wise_dict):
     for key, value in pattern_wise_dict.items():
         split_index = []
         if len(value) <= 1:
-            global_lst.append([value[0], None])
+            print_patterns([value[0][0], None])
             continue
         for index, (i, j) in enumerate(pairwise(value)):
             if check_pattern(i, j):
@@ -88,19 +102,18 @@ def parse_for_patterns(pattern_wise_dict):
             combine_values(value[i:j])
 
 
-def combine_values(lst):
-    split_lst = [re.split("([0-9]+)", each) for each in lst]
-    fin_lst = []
-    for each in zip(*split_lst):
-        val = list(set(each))
-        fin_lst.append(val[0] if len(val) == 1 else val)
-    parse_simple_pattern(fin_lst)
+def print_patterns(file_pattern_lst):
+    '''
+    This function takes a list and prints it to console in the following format
+    Number_of_files    File Pattern    Series.
+    '''
+    if file_pattern_lst[1]:
+        print(file_pattern_lst[2], file_pattern_lst[0], file_pattern_lst[1])
+    else:
+        print(1, file_pattern_lst[0])
 
 
 if __name__ == "__main__":
     lst = os.listdir("data/")
-
-    global_lst = []
     new_dict = group_by_hash(lst)
     parse_for_patterns(new_dict)
-    print_patterns(global_lst)
