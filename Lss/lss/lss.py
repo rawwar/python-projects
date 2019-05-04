@@ -95,7 +95,7 @@ def parse_for_patterns(pattern_wise_dict):
     each of the value and then passes each of these separated values to
     combine values function.
     '''
-    for key, value in pattern_wise_dict.items():
+    for value in pattern_wise_dict.values():
         split_index = []
         if len(value) <= 1:
             print_pattern([value[0][0], None])
