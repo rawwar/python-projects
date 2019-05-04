@@ -6,8 +6,6 @@ from pprint import pprint
 from itertools import tee
 from collections import defaultdict
 
-data_folder = "data"
-
 
 def group_by_hash(file_list):
     '''
