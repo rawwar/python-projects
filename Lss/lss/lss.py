@@ -99,7 +99,7 @@ def parse_for_patterns(pattern_wise_dict):
     for value in pattern_wise_dict.values():
         split_index = []
         if len(value) <= 1:
-            print_pattern([value[0][0], None])
+            print_pattern([value[0][0], ""])
             continue
         for index, (i, j) in enumerate(pairwise(value)):
             if check_pattern(i, j):
@@ -118,10 +118,7 @@ def print_pattern(file_pattern_lst):
     This function takes a list and prints it to console in the following format
     Number_of_files    File Pattern    Series.
     '''
-    if file_pattern_lst[1]:
-        print(file_pattern_lst[0], file_pattern_lst[1], file_pattern_lst[2])
-    else:
-        print(1, file_pattern_lst[0])
+    print("\t".join([str(i) for i in file_pattern_lst]))
 
 
 if __name__ == "__main__":

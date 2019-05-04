@@ -13,6 +13,19 @@ sd_fx29.0109.rgb sd_fx29.0121.rgb sd_fx29.0134.rgb sd_fx29.0146.rgb
 sd_fx29.0110.rgb sd_fx29.0123.rgb sd_fx29.0135.rgb sd_fx29.0147.rgb
 sd_fx29.0111.rgb sd_fx29.0124.rgb sd_fx29.0136.rgb strange.xml
 alpha.txt
+file01_0040.rgb
+file01_0041.rgb
+file01_0042.rgb
+file01_0043.rgb
+file02_0044.rgb
+file02_0045.rgb
+file02_0046.rgb
+file02_0047.rgb
+file1.03.rgb
+file2.03.rgb
+file3.03.rgb
+file4.03.rgb
+file.info.03.rgb
 '''
 # sd29_fx.rgb.0112
 # sd29_fx.rgb.0113
