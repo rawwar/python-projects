@@ -1,5 +1,6 @@
 import os
 import re
+import sys
 from more_itertools import consecutive_groups
 from pprint import pprint
 from itertools import tee
@@ -124,6 +125,9 @@ def print_pattern(file_pattern_lst):
 
 
 if __name__ == "__main__":
-    lst = os.listdir("data/")
-    new_dict = group_by_hash(lst)
-    parse_for_patterns(new_dict)
+    if len(sys.argv) == 1:
+        file_lst = os.listdir(".")
+    else:
+        file_lst = os.listdir(sys.argv[1])
+    hash_dict= group_by_hash(file_lst)
+    parse_for_patterns(hash_dict)
