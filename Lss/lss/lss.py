@@ -20,7 +20,7 @@ def group_by_hash(file_list):
     '''
     grouped_dict = defaultdict(lambda: [])
     for each in file_list:
-        hash_value = hash(tuple(re.split("[0-9]+", each)))
+        hash_value = hash(tuple([len(i) if i.isdigit() else i for i in re.split("([0-9]+)", each)] ))
         grouped_dict[hash_value].append(re.split("([0-9]+)", each))
 
     return grouped_dict
