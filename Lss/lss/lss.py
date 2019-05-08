@@ -5,8 +5,36 @@ from more_itertools import consecutive_groups
 from itertools import tee
 from collections import defaultdict
 import argparse
+import time
 
+split_func = lambda x: [re.split("([0-9]+)", each) for each in x]
+# hash_ = lambda x: hash(tuple([len(i) if i.isdigit() else i for i in x ] ))
 
+def timeit(method):
+    def timed(*args, **kw):
+        ts = time.time()
+        result = method(*args, **kw)
+        te = time.time()
+        if 'log_time' in kw:
+            name = kw.get('log_name', method.__name__.upper())
+            kw['log_time'][name] = int((te - ts) * 1000)
+        else:
+            print '%r  %2.2f ms' % \
+                  (method.__name__, (te - ts) * 1000)
+        return result
+    return timed
+
+def hash_(values):
+    temp_lst = []
+    for each_value in values:
+        if each_value.isdigit():
+            if each_value.startswith("0"):
+                temp_lst.append("0")
+        else:
+            temp_lst.append(each_value)
+    return hash(tuple(temp_lst))
+
+# @timeit
 def group_by_hash(file_list):
     '''
     This function takes a list and groups elements
@@ -20,8 +48,7 @@ def group_by_hash(file_list):
     '''
     grouped_dict = defaultdict(lambda: [])
     for each in file_list:
-        hash_value = hash(tuple([len(i) if i.isdigit() else i for i in re.split("([0-9]+)", each)] ))
-        grouped_dict[hash_value].append(re.split("([0-9]+)", each))
+        grouped_dict[hash_(each)].append(each)
 
     return grouped_dict
 
@@ -87,7 +114,7 @@ def combine_values(lst):
         fin_lst.append(val[0] if len(val) == 1 else val)
     parse_simple_pattern(fin_lst)
 
-
+# @timeit
 def parse_for_patterns(pattern_wise_dict):
     '''
     This function takes a dictionary and parses it to separate patterns in
@@ -110,13 +137,12 @@ def parse_for_patterns(pattern_wise_dict):
         for i, j in pairwise(split_index):
             combine_values(value[i:j])
 
-def read_files(location):
+def read_file_paths(location):
     if os.path.isdir(location):
         return os.listdir(location)
     else:
-        print("Please input a valid and existing directory path")
-        sys.exit()
-        
+        print("Invalid path - {0}\nPlease input a valid and existing directory path".format(location))
+        return []
         
 
 def print_pattern(file_pattern_lst):
@@ -126,16 +152,52 @@ def print_pattern(file_pattern_lst):
     '''
     print("\t".join([str(i) for i in file_pattern_lst]))
 
+def lss(path,file_lst):
+    print("\n>lss output for {0}\n".format(path))
+    try:
+        parsed_file_paths_lst = split_func(file_lst)
+        hash_dict= group_by_hash(parsed_file_paths_lst)
+        parse_for_patterns(hash_dict)
+    except:
+        print("Unable to parse for patterns")
+    finally:
+        print('-'*50+"\n")
+    
+
+def parse_input_args(paths,option=1):
+    if option==1:
+        lss("Combined output",[each_file for each_path in paths for each_file in read_file_paths(each_path)])
+    else:
+        for each_path in paths:
+            lss(each_path,read_file_paths(each_path))
+
+def interactive_input(paths):
+    if paths:
+        if len(paths)==1:
+            lss(paths[0],read_file_paths(paths[0]))
+        else:
+            flag = True
+            
+            while(flag):
+                print("You have given multiple inputs. Please choose one of the following options")
+                print("1. Combined output")
+                print("2. Individual outputs")
+                try:
+                    input_option = int(input())
+                except Exception:
+                    print("Invalid input, please choose again")
+                    continue
+                if input_option in [1,2] :
+                    flag = False
+                    parse_input_args(paths,option=input_option)
+                    break
+                else:
+                    print("Invalid input, please choose again")
+    else:
+        lss("Current Location",read_file_paths("."))
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="command line arguments parser for lss command")
-    parser.add_argument("path",metavar='p',type=str,nargs='?',help='path of the directory')
+    parser.add_argument("path",metavar='p',type=str,nargs='*',help='path of the directory')
     args = parser.parse_args()
-    # print(args.path)
-    if args.path:
-        file_lst = read_files(os.path.normpath(args.path))
-    else:
-        file_lst = os.listdir(".")
-    hash_dict= group_by_hash(file_lst)
-    parse_for_patterns(hash_dict)
-    
+    interactive_input(args.path)
