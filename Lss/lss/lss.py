@@ -97,7 +97,7 @@ def parse_for_patterns(pattern_wise_dict):
     for value in pattern_wise_dict.values():
         split_index = []
         if len(value) <= 1:
-            print_pattern([value[0][0], ""])
+            print_pattern(["1","".join(value[0]), ""])
             continue
         for index, (i, j) in enumerate(pairwise(value)):
             if check_pattern(i, j):
