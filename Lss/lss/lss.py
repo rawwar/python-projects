@@ -2,9 +2,10 @@ import os
 import re
 import sys
 from more_itertools import consecutive_groups
-from pprint import pprint
 from itertools import tee
+from custom_exceptions import *
 from collections import defaultdict
+import argparse
 
 
 def group_by_hash(file_list):
@@ -69,7 +70,7 @@ def parse_simple_pattern(lst):
             pad = True if each[0].startswith("0") else False
             temp = len(each[0])
             # Forming file pattern
-            file_pattern += f"%{0 if pad else ''}{temp if temp>1 else ''}d"
+            file_pattern += "%{0}{1}d".format(0 if pad else '',temp if temp>1 else '')
             count = len(int_lst)
         else:
             file_pattern += each
@@ -110,6 +111,13 @@ def parse_for_patterns(pattern_wise_dict):
         for i, j in pairwise(split_index):
             combine_values(value[i:j])
 
+def read_files(location="."):
+    if  os.path.isdir(location):
+        hash_dict= group_by_hash(location)
+        parse_for_patterns(hash_dict)
+    else:
+        raise FolderNotFound
+        
 
 def print_pattern(file_pattern_lst):
     '''
@@ -120,9 +128,12 @@ def print_pattern(file_pattern_lst):
 
 
 if __name__ == "__main__":
-    if len(sys.argv) == 1:
-        file_lst = os.listdir(".")
-    else:
-        file_lst = os.listdir(sys.argv[1])
-    hash_dict= group_by_hash(file_lst)
-    parse_for_patterns(hash_dict)
+    parser = argparse.ArgumentParser(description="command line arguments parser for lss command")
+    parser.add_argument("path",metavar='p',type=str,nargs=1,help='path of the directory')
+    args = parser.parse_args()
+    print(args.path)
+    # if len(sys.argv) == 1:
+    #     read_files()
+    # else:
+    #     read_files(sys.argv[1])
+    
