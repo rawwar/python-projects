@@ -26,6 +26,20 @@ file2.03.rgb
 file3.03.rgb
 file4.03.rgb
 file.info.03.rgb
+test6_file.01033.txt
+test6_file.01034.txt
+test6_file.01035.txt
+test6_file.01040.txt
+test6_file.01041.txt
+test6_file.01042.txt
+test6_file.1033.txt
+test6_file.1034.txt
+test6_file.1035.txt
+test6_file.1040.txt
+test6_file.1041.txt
+test6_file.1042.txt
+test6_file.1066.txt
+test6_file.1067.txt
 '''
 # sd29_fx.rgb.0112
 # sd29_fx.rgb.0113
@@ -98,6 +112,8 @@ file.info.03.rgb
 # file.info.03.rgb
 # '''
 
+if not os.path.exists("data"):
+    os.mkdir("data")
 for each in data.replace("\n"," ").split():
     open(os.path.join("data",each),'w').close()
 
