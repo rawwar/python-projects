@@ -58,8 +58,8 @@ def check_pattern(file1, file2):
     two functions differ at more than two places else it returns True
     '''
     counter = 0
-    for i, j in zip(*[file1[::-1], file2[::-1]]):
-        if i != j:
+    for file_1_value, file_2_value in zip(*[file1[::-1], file2[::-1]]):
+        if file_1_value != file_2_value:
             counter += 1
         if counter >= 2:
             return False
@@ -82,8 +82,8 @@ def parse_simple_pattern(lst):
             ]
             # makes a sequence separated by comma
             sequence = ",".join(
-                str(i) if len(i) == 1 else str(i[0]) + "-" + str(i[-1])
-                for i in group_lst)
+                str(each_group) if len(each_group) == 1 else str(each_group[0]) + "-" + str(each_group[-1])
+                for each_group in group_lst)
             # To check if the numbers are zero padded
             pad = True if each[0].startswith("0") else False
             digits_length = len(each[0])
@@ -115,21 +115,21 @@ def parse_for_patterns(pattern_wise_dict):
     each of the value and then passes each of these separated values to
     combine values function.
     '''
-    for value in pattern_wise_dict.values():
+    for file_lst in pattern_wise_dict.values():
         split_index = []
-        if len(value) <= 1:
-            print_pattern(["1", "".join(value[0]), ""])
+        if len(file_lst) <= 1:
+            print_pattern(["1", "".join(file_lst[0]), ""])
             continue
-        for index, (i, j) in enumerate(pairwise(value)):
-            if check_pattern(i, j):
+        for index, (first_file, second_file) in enumerate(pairwise(file_lst)):
+            if check_pattern(first_file, second_file):
                 pass
             else:
                 split_index.append(index + 1)
         if not split_index or split_index[0] != 0:
             split_index.insert(0, 0)
-        split_index.append(len(value))
-        for i, j in pairwise(split_index):
-            combine_values(value[i:j])
+        split_index.append(len(file_lst))
+        for start_index, end_index in pairwise(split_index):
+            combine_values(file_lst[start_index:end_index])
 
 
 def read_file_paths(location):
@@ -148,8 +148,8 @@ def print_pattern(file_pattern_lst):
     Number_of_files    File Pattern    Series.
     '''
     print("\t".join([
-        str(i) if not isinstance(i, list) else "".join(chain.from_iterable(i))
-        for i in file_pattern_lst
+        str(each) if not isinstance(each, list) else "".join(chain.from_iterable(each))
+        for each in file_pattern_lst
     ]))
 
 
