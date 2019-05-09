@@ -110,3 +110,4 @@ venv.bak/
 *.xml
 *.info
 *.txt
+*.vscode*
