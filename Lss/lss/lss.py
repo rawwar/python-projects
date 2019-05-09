@@ -86,10 +86,10 @@ def parse_simple_pattern(lst):
                 for i in group_lst)
             # To check if the numbers are zero padded
             pad = True if each[0].startswith("0") else False
-            temp = len(each[0])
+            digits_length = len(each[0])
             # Forming file pattern
             file_pattern += "%{0}{1}d".format(0 if pad else '',
-                                              temp if temp > 1 else '')
+                                              digits_length if digits_length > 1 else '')
             count = len(int_lst)
         else:
             file_pattern += each
