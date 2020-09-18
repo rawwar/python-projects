@@ -1,0 +1,29 @@
+<html>
+<head>
+  <script>
+  MathJax = {
+    tex: {inlineMath: [['$', '$'], ['\\(', '\\)']]}
+  };
+  </script>
+  <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  MathML: {
+    extensions: ["content-mathml.js"]
+  }
+});
+</script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+</head>
+<body>
+
+{% if latest_question_list %}
+    <ul>
+    {% for question in latest_question_list %}
+        <li> <p>{{ question.question_text|safe }}<p></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No questions are available.</p>
+{% endif %}
+</body>
+</html>
